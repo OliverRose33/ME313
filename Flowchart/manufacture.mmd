@@ -1,0 +1,91 @@
+%%{
+    init: {
+        'theme': 'dark',
+        'themeVariables': {
+            'fontSize': '30px'
+        }
+    }
+}%%
+
+flowchart TD
+
+    classDef input color:#000000,fill:#d5e8d4,stroke:#82b366;
+    classDef process color:#000000,fill:#dae8fc,stroke:#6c8ebf;
+    classDef step color:#000000,fill:#fff2cc,stroke:#d6b656;
+    classDef output color:#000000,fill:#f8cecc,stroke:#b85450;
+
+%% Inputs
+
+    %% cSidePanel>"Chassis side panel"]:::input
+    cFrontCrossbrace>"Front axle crossbrace"]:::input
+    %% cTopCrossbrace>"Top crossbrace"]:::input
+    fShaftStock>"4mm round steel bar"]:::input
+    fWheelRim>"Front wheel rim"]:::input
+    fBearingMount>"Front axle bearing mount"]:::input
+    fBearing>"NSK 624 bearing"]:::input
+    fShaftCollar>"4mm shaft collar"]:::input
+
+    %% jFlywheelProfile>"Flywheel axle profile tool"]:::input
+    %% jWheelProfile>"Wheel axle profile tool"]:::input
+    %% jHoleTolerance>"Hole tolerance tool"]:::input
+
+    %% rShaftStock>"4mm round steel bar"]:::input
+    %% rSprocket>"Meccano 95b sprocket"]:::input
+    %% rWheelRim>"Rear wheel rim"]:::input
+    %% rBearingMount>"Rear axle bearing mount"]:::input
+    %% rBearing>"NSK 624 bearing"]:::input
+    %% rShaftCollar>"4mm shaft collar"]:::input
+
+    %% wFlywheel>"Flywheel"]:::input
+    %% wShaftStock>"6mm round steel bar"]:::input
+    %% wMountPlain>"Flywheel mount (plain side)"]:::input
+    %% wMountChain>"Flywheel mount (chain side)"]:::input
+    %% wSprocket>"Meccano 95 sprocket"]:::input
+    %% wBearingMount>"Flywheel axle bearing mount"]:::input
+    %% wBearing>"NSK 626 bearing"]:::input
+    %% wShaftCollar>"6mm shaft collar"]:::input
+
+    %% xChain>"Meccano 94 chain"]:::input
+    xBolt>"M3x12mm hex head bolt"]:::input
+    xNut>"M3 nut"]:::input
+    xWasher>"M3 washer"]:::input
+    %% xGrubScrew>"Meccano 69a grub screw"]:::input
+    xRubberBand>"Rubber band"]:::input
+
+%% Assemblies
+
+    aFrontAxleShaft(["Front axle shaft"]):::step
+    aFrontAxleBearingMount(["Front axle bearing mount"]):::step
+    aFrontAxleSubassembly(["Front axle shaft subassembly"]):::step
+    aFrontWheel(["Front wheel"]):::step
+    aFrontAxle(["Front axle assembly"]):::output
+
+%% Front axle
+
+    subgraph f [Front Axle Assembly]
+
+        fCutToLength[["Cut to length"]]:::process
+        fFileFlats[["File flats"]]:::process
+        fInstallCollar[["Slide shaft collars onto axle shaft"]]:::process
+        fPressFitBearing[["Press fit bearings"]]:::process
+        fMountBearings[["Slide bearing mounts onto axle shaft"]]:::process
+        fInstallTyre[["Mount rubber bands to rims"]]:::process
+        fMountCrossbrace[["Mount axle to crossbrace"]]:::process
+        fTightenCollar[["Adjust shaft collars and tighten set screws"]]:::process
+        fInstallWheels[["Install wheels"]]:::process
+
+        fShaftStock --> fCutToLength --> fFileFlats --> aFrontAxleShaft
+        aFrontAxleShaft --> fInstallCollar
+        fShaftCollar -- 2x --> fInstallCollar --> fMountBearings
+        fBearingMount & fBearing --> fPressFitBearing --> aFrontAxleBearingMount
+        aFrontAxleBearingMount -- 2x --> fMountBearings --> aFrontAxleSubassembly
+        fWheelRim --> fInstallTyre
+        xRubberBand -- 3x --> fInstallTyre --> aFrontWheel
+        aFrontWheel -- 2x --> fInstallWheels
+
+        aFrontAxleSubassembly & cFrontCrossbrace --> fMountCrossbrace
+        xNut & xBolt & xWasher -- 4x --> fMountCrossbrace
+        fMountCrossbrace --> fTightenCollar --> fInstallWheels
+        fInstallWheels --> aFrontAxle
+
+    end
